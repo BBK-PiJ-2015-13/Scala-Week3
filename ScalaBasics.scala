@@ -29,8 +29,8 @@ object ScalaBasics {
    * @return the inclusive Range from start to end
    */
   def inRange(start: Int, end: Int): Range = {
-    //scala.collection.immutable.Range.inclusive(start, end)
-    start.until(start, end)
+    scala.collection.immutable.Range.inclusive(start, end)
+    //start.until(start, end)
   }
   
   /**
@@ -42,13 +42,11 @@ object ScalaBasics {
    * @return a Range of odd integers, excluding the last add integer
    */
   def oddRange(n: Int): Range = {
-    var intlist = List()
-    for (i <- 1 to n) {
-      if (n % 2 != 0) {
-        n :: intlist
-      }
+    if (n < 3) {
+      scala.collection.immutable.Range.inclusive(1, 1)
+    } else {
+      Range(1, n, 2)
     }
-    intlist.indices
   }
   
   /**
@@ -66,8 +64,8 @@ object ScalaBasics {
   def minWhile(r: Array[Int]): Int = {
     var i = 0
     var x = r(i)
-    while(r(i) != null) {
-      if (r(i+1) > (i)) {
+    while(r(i) != r.last) {
+      if (r(i+1) < x) {
         x = r(i+1)
       }
       i+=1
@@ -88,9 +86,10 @@ object ScalaBasics {
    * @return the minimum integer in the array
    */
   def minFor(r: Array[Int]): Int = {
-    for (i <- r.length) {
+    for (i <- 0 to r.length) {
       r.min
     }
+    r.min
   }
 
   /**
@@ -108,12 +107,18 @@ object ScalaBasics {
    * @return the minimum integer in the array
    */
   def minRecursive(r: Array[Int]): Int = {
-   if (r.last > r.head) {
-     minRecursive(r.drop(r.last))
+    if (r.length < 2) {
+      if (r.head != null) {
+        r.head
+      } else {
+        r.last
+      }
+    }else if (r.last > r.head) {
+     minRecursive(r.dropRight(r.last))
    } else if (r.head > r.last) {
      minRecursive(r.drop(r.head))
    }  else {
-     r.head
+     r.apply(0)
    }
   }
 
@@ -126,7 +131,7 @@ object ScalaBasics {
    * @return the base 36 equivalent
    */
   def base36(b: BigInt): String = {
-    b.toString()
+    b.toString(36)
   }
 
   /**
@@ -151,7 +156,7 @@ object ScalaBasics {
    * @return the split string as a tuple
    */
   def splitInHalf(s: String): (String, String) = {
-    (s.slice(s.charAt(0), s.length/2), s.slice(s.length/2, s.length))
+    (s.slice(0, s.length/2), s.slice(s.length/2, (s.length)+1))
   }
 
   /**
@@ -176,7 +181,7 @@ object ScalaBasics {
    * @return true if s is a palindrome; false otherwise
    */
   def isPalindrome(s: String): Boolean = {
-    s.slice(s.charAt(0), s.length / 2).contentEquals(s.slice(s.length / 2, s.length))
+    s.slice(0, s.length / 2).contentEquals(s.slice(s.length / 2, s.length).reverse)
   }
 
 
@@ -222,11 +227,15 @@ object ScalaBasics {
    * @return a map from words to the number of times that word was seen
    */
   def wordCounter(lines: Array[String]): Map[String, Int] = {
+  var myMap = Map("" -> 0)
   var y = 0
-  for(i <- lines.length) {
+  var intlist = List()
+  for(i <- 0 to lines.length) {
     var x = lines.indexOf(lines(i), y)
+    myMap += (lines.apply(x) -> y)
     y = x
   }
+myMap
   //lines.foreach()
 }
   }
